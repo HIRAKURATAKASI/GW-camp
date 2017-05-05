@@ -47,6 +47,25 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         saveData.set(nameTextField.text, forKey: "name")
         saveData.synchronize()
         
+        let myGeocoder:CLGeocoder = CLGeocoder()
+        
+        //住所
+        let searchStr = placeTextField.text
+        
+        //住所を座標に変換する。
+        myGeocoder.geocodeAddressString(searchStr!, completionHandler: {(placemarks, error) in
+            
+            if(error == nil) {
+                for placemark in placemarks! {
+                    let location:CLLocation = placemark.location!
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate = CLLocationCoordinate2DMake(37.331652997806785, -122.03072304117417)
+                    annotation.title = "株式会社ゴーリスト"
+                    annotation.subtitle = "変な人がいっぱい"
+                    self.mapView.addAnnotation(annotation)
+                } else {
+                    self.placeTextField.text = "検索できませんでした"
+                }
         //alertを出す
         let alert:UIAlertController = UIAlertController(title:"保存",message: "保存が完了しました",preferredStyle: .alert)
         
