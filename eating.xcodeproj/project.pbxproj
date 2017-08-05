@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E995A9C1EFBDDE300CF7479 /* StoreInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */; };
 		4EAD3A721EB9B62D00812438 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3A711EB9B62D00812438 /* AppDelegate.swift */; };
 		4EAD3A741EB9B62D00812438 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3A731EB9B62D00812438 /* ViewController.swift */; };
 		4EAD3A771EB9B62D00812438 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EAD3A751EB9B62D00812438 /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 		4EAD3AA11EB9B9C200812438 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD3AA01EB9B9C200812438 /* MapKit.framework */; };
 		4EAD3AA31EBABB1A00812438 /* detailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3AA21EBABB1A00812438 /* detailViewController.swift */; };
 		4EAD3AA51EBB035E00812438 /* 写真.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4EAD3AA41EBB035E00812438 /* 写真.JPG */; };
+		4EE59CCC1EC476C500B4E9AB /* CellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreInfo.swift; sourceTree = "<group>"; };
 		4EAD3A6E1EB9B62D00812438 /* eating.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eating.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EAD3A711EB9B62D00812438 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4EAD3A731EB9B62D00812438 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -53,6 +56,7 @@
 		4EAD3AA01EB9B9C200812438 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4EAD3AA21EBABB1A00812438 /* detailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = detailViewController.swift; sourceTree = "<group>"; };
 		4EAD3AA41EBB035E00812438 /* 写真.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "写真.JPG"; path = "../../../Downloads/写真.JPG"; sourceTree = "<group>"; };
+		4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,8 @@
 				4EAD3A7A1EB9B62D00812438 /* LaunchScreen.storyboard */,
 				4EAD3A7D1EB9B62D00812438 /* Info.plist */,
 				4EAD3AA21EBABB1A00812438 /* detailViewController.swift */,
+				4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */,
+				4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */,
 			);
 			path = eating;
 			sourceTree = "<group>";
@@ -283,7 +289,9 @@
 			files = (
 				4EAD3A741EB9B62D00812438 /* ViewController.swift in Sources */,
 				4EAD3A721EB9B62D00812438 /* AppDelegate.swift in Sources */,
+				4EE59CCC1EC476C500B4E9AB /* CellViewController.swift in Sources */,
 				4EAD3AA31EBABB1A00812438 /* detailViewController.swift in Sources */,
+				4E995A9C1EFBDDE300CF7479 /* StoreInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

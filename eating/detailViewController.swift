@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import  CoreLocation
 
 class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
     @IBOutlet var placeTextField: UITextField!
@@ -18,10 +19,11 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view.
-        placeTextField.text = saveData.string(forKey: "place")
-        nameTextField.text = saveData.string(forKey: "name")
-        webTextField.text = saveData.string(forKey: "web")
+        /*placeTextField.text = saveData.string(forKey: "place")
+         nameTextField.text = saveData.string(forKey: "name")
+         webTextField.text = saveData.string(forKey: "web")*/
         
         nameTextField.delegate = self
         placeTextField.delegate = self
@@ -31,21 +33,13 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         super.viewWillAppear(animated)
         self.configureObserver()
     }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.removeObserver()
-        
-        
-    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     @IBAction func saveMemo(){
-        saveData.set(placeTextField.text, forKey: "place")
-        saveData.set(webTextField.text, forKey: "web")
-        saveData.set(nameTextField.text, forKey: "name")
-        saveData.synchronize()
         
         let myGeocoder:CLGeocoder = CLGeocoder()
         
@@ -55,17 +49,40 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         //住所を座標に変換する。
         myGeocoder.geocodeAddressString(searchStr!, completionHandler: {(placemarks, error) in
             
-            if(error == nil) {
-                for placemark in placemarks! {
-                    let location:CLLocation = placemark.location!
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate = CLLocationCoordinate2DMake(37.331652997806785, -122.03072304117417)
-                    annotation.title = "株式会社ゴーリスト"
-                    annotation.subtitle = "変な人がいっぱい"
-                    self.mapView.addAnnotation(annotation)
-                } else {
-                    self.placeTextField.text = "検索できませんでした"
-                }
+            let location:CLLocation = placemarks![0].location!
+            
+            let web = URL(fileURLWithPath: self.webTextField.text!)
+            
+            
+            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: web, l: location)
+            
+            
+
+            if (self.saveData.object(forKey: "storedata") != nil) {
+                var storeInfos = self.saveData.object(forKey: "storedata") as! [StoreInfo]
+                storeInfos.append(storeInfo)
+                self.saveData.set(storeInfos, forKey: "storedata")
+            }else{
+                var storeInfos: [StoreInfo] = []
+                storeInfos.append(storeInfo)
+                self.saveData.set(storeInfos, forKey: "storedata")
+            }
+            
+            
+            
+            /*let location:CLLocation = placemark.location!
+             self.saveData.set(self.placeTextField.text, forKey: "place")
+             self.saveData.set(self.webTextField.text, forKey: "web")
+             self.saveData.set(self.nameTextField.text, forKey: "name")
+             self.saveData.set(location.coordinate.latitude, forKey: "latitude")
+             self.saveData.set(location.coordinate.longitude, forKey: "longtitude")*/
+            
+            
+            
+            self.saveData.synchronize()
+            
+        })
+        
         //alertを出す
         let alert:UIAlertController = UIAlertController(title:"保存",message: "保存が完了しました",preferredStyle: .alert)
         
@@ -81,6 +98,15 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         )
         present(alert, animated: true, completion: nil)
     }
+    
+    
+    func getNowClockString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd' 'HH:mm:ss"
+        let now = Date()
+        return formatter.string(from: now)
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
         
         // キーボードを閉じる
@@ -116,7 +142,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         
     }
     func configureObserver(){
-    //Notificationを設定
+        //Notificationを設定
         let notification = NotificationCenter.default
         notification.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         notification.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -133,20 +159,20 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         let rect = (notification?.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
         let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? Double
         UIView.animate(withDuration: duration!, animations: { () in
-        let  transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
-        self.view.transform = transform
+            let  transform = CGAffineTransform(translationX: 0, y: -(rect?.size.height)!)
+            self.view.transform = transform
         })
         
     }
     
     //キーボードが消えた時に画面を戻す
     func keyboardWillHide(notification: Notification?){
-    
-    let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey]as? Double
-    UIView.animate(withDuration: duration!,animations: { () in
-    
-        self.view.transform = CGAffineTransform.identity
-    })
+        
+        let duration: TimeInterval? = notification?.userInfo?[UIKeyboardAnimationCurveUserInfoKey]as? Double
+        UIView.animate(withDuration: duration!,animations: { () in
+            
+            self.view.transform = CGAffineTransform.identity
+        })
     }
     
     
