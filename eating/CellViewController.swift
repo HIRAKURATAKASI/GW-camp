@@ -10,12 +10,18 @@ import UIKit
 
 class CellViewController: UIViewController, UITableViewDataSource {
 
-    @IBOutlet var table:UITableView!
+    @IBOutlet var table : UITableView!
     var saveData: UserDefaults = UserDefaults.standard
+    var storeInfos: [StoreInfo] = []
     override func viewDidLoad() {
         super.viewDidLoad()
       //  table.datasource
         // Do any additional setup after loading the view.
+        table.dataSource = self
+        let tmpArray = saveData.array(forKey: "storedata") as! [[String : Any]]
+        for i in tmpArray{
+            storeInfos.append(toStoreInfo(dic: i))
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,14 +29,16 @@ class CellViewController: UIViewController, UITableViewDataSource {
         // Dispose of any resources that can be recreated.
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        storeInfos.string(forKey: "storedata")
         return  storeInfos.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "shoplist", for: indexPath)
-        cell.textLabel?.text = storeIfos[indexPath.row]
+        cell.textLabel?.text = storeInfos[indexPath.row].name
         return cell
+        
     }
+
+    
 
     /*
     // MARK: - Navigation

@@ -14,7 +14,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     @IBOutlet var webTextField: UITextField!
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var haikeiimageView: UIImageView!
-    
     var saveData: UserDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
@@ -45,26 +44,32 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         
         //住所
         let searchStr = placeTextField.text
+        var location:CLLocation
+        location = CLLocation(latitude: 35.1, longitude: 139.3)
         
         //住所を座標に変換する。
         myGeocoder.geocodeAddressString(searchStr!, completionHandler: {(placemarks, error) in
-            
-            let location:CLLocation = placemarks![0].location!
-            
-            let web = URL(fileURLWithPath: self.webTextField.text!)
-            
-            
-            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: web, l: location)
-            
-            
+            if(error == nil){
+                for placemark in placemarks!{
+                location = placemark.location!
+                }
+                } else {
+                    self .placeTextField.text = "検索できませんでした"
+                }
 
+        
+        
+            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location)
+            
+            
+            
             if (self.saveData.object(forKey: "storedata") != nil) {
-                var storeInfos = self.saveData.object(forKey: "storedata") as! [StoreInfo]
-                storeInfos.append(storeInfo)
+                var storeInfos = self.saveData.array(forKey: "storedata") as![[String: Any]]
+                storeInfos.append(storeInfo.todictionary())
                 self.saveData.set(storeInfos, forKey: "storedata")
             }else{
-                var storeInfos: [StoreInfo] = []
-                storeInfos.append(storeInfo)
+                var storeInfos: [[String: Any]] = []
+                storeInfos.append(storeInfo.todictionary())
                 self.saveData.set(storeInfos, forKey: "storedata")
             }
             
