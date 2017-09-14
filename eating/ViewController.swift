@@ -17,23 +17,33 @@ class ViewController: UIViewController,MKMapViewDelegate{
     var backgroundTaskID : UIBackgroundTaskIdentifier = 0
     var myMapView: MKMapView!
     var myLocationManager: CLLocationManager!
+    var nowLocation: CLLocation! = CLLocation()
     
     override func viewDidLoad() {
-        var location:CLLocationCoordinate2D!
-        location = CLLocationCoordinate2D(latitude: 35.1, longitude: 139.3)
-        mapView.setCenter(location,animated:true)
-        // 縮尺を設定
+
+        //MARK: 現在位置関連
+
+        //TODO: 現在位置を取得
+        if CLLocationManager.locationServicesEnabled() {
+            myLocationManager = CLLocationManager()
+            myLocationManager.delegate = self
+            myLocationManager.startUpdatingLocation()
+        }
+        
+        //中心点を表示
+        mapView.setCenter(nowLocation,animated:true)
         mapView.delegate = self
         
         var region:MKCoordinateRegion = MKCoordinateRegion()
-        region.center = location
-        region.span.latitudeDelta = 1.0
-        region.span.longitudeDelta = 1.0
+        region.center = nowLocation
+        region.span.latitudeDelta = 0.1
+        region.span.longitudeDelta = 0.1
         mapView.setRegion(region,animated:true)
         super.viewDidLoad()
         
-
         
+        //MARK: saveData関連
+        //saveDataにデータを入れる
         if saveData.array(forKey: "storedata") != nil {
             let tmpArray = saveData.array(forKey: "storedata") as? [[String : Any]]
             for i in tmpArray!{
@@ -43,86 +53,17 @@ class ViewController: UIViewController,MKMapViewDelegate{
             }
             
         } else{
-            let temparray : [String : Any] = [:]
+            storeInfos = []
             
-            /*
-            // LocationManagerの生成.
-            myLocationManager = CLLocationManager()
-            
-            // Delegateの設定.
-            myLocationManager.delegate = self
-            
-            // 距離のフィルタ.
-            myLocationManager.distanceFilter = 0.1
-            
-            // 精度.
-            myLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-            
-            // セキュリティ認証のステータスを取得.
-            let status = CLLocationManager.authorizationStatus()
-            
-            // まだ認証が得られていない場合は、認証ダイアログを表示.
-            if(status == CLAuthorizationStatus.notDetermined) {
-                
-                // まだ承認が得られていない場合は、認証ダイアログを表示.
-                self.myLocationManager.requestAlwaysAuthorization();
-            }
-            // 位置情報の更新を開始.
-            myLocationManager.startUpdatingLocation()
-            
-            // MapViewの生成.
-            myMapView = MKMapView()
-            
-            // MapViewのサイズを画面全体に.
-            myMapView.frame = self.view.bounds
-            
-            // Delegateを設定.
-            myMapView.delegate = self
-            
-            // MapViewをViewに追加.
-            self.view.addSubview(myMapView)
-            
-            // 中心点の緯度経度.
-            let myLat: CLLocationDegrees = 35.640936
-            let myLon: CLLocationDegrees = 139.733481
-            let myCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(myLat, myLon) as CLLocationCoordinate2D
-            
-            // 縮尺.
-            let myLatDist : CLLocationDistance = 1
-            let myLonDist : CLLocationDistance = 1
-            
-            // Regionを作成.
-            let myRegion: MKCoordinateRegion = MKCoordinateRegionMakeWithDistance(myCoordinate, myLatDist, myLonDist);
-            
-            // MapViewに反映.
-            myMapView.setRegion(myRegion, animated: true)
-            */
         }
-        // GPSから値を取得した際に呼び出されるメソッド.
-        func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-            
-            // 配列から現在座標を取得.
-            var myLocations: NSArray = locations as NSArray
-            let myLastLocation: CLLocation = myLocations.lastObject as! CLLocation
-            var myLocation:CLLocationCoordinate2D = myLastLocation.coordinate
-            
-            // 縮尺.
-            let myLatDist : CLLocationDistance = 1
-            let myLonDist : CLLocationDistance = 1
-            
-            // Regionを作成.
-            let myRegion: MKCoordinateRegion = MKCoordinateRegionMakeWithDistance(myLocation, myLatDist, myLonDist);
-            
-            // MapViewに反映.
-            myMapView.setRegion(myRegion, animated: true)
-        }
+        
+        
         
         //アノテーションビューを返すメソッド
         
-         // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
+        // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
         // Do any additional setup after loading the view, typically from a nib.
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -191,5 +132,9 @@ extension ViewController: CLLocationManagerDelegate {
         for location in locations {
             print("緯度:\(location.coordinate.latitude) 経度:\(location.coordinate.longitude) 取得時刻:\(location.timestamp.description)")
         }
+        
+        nowLocation = locations.last
     }
 }
+
+
