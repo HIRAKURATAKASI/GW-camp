@@ -18,16 +18,12 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
-        /*placeTextField.text = saveData.string(forKey: "place")
-         nameTextField.text = saveData.string(forKey: "name")
-         webTextField.text = saveData.string(forKey: "web")*/
-        
+        //delegateの設定
         nameTextField.delegate = self
         placeTextField.delegate = self
         webTextField.delegate = self
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.configureObserver()
@@ -39,29 +35,22 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     }
     
     @IBAction func saveMemo(){
-        
         let myGeocoder:CLGeocoder = CLGeocoder()
-        
         //住所
         let searchStr = placeTextField.text
         var location:CLLocation
         location = CLLocation(latitude: 35.1, longitude: 139.3)
-        
         //住所を座標に変換する。
         myGeocoder.geocodeAddressString(searchStr!, completionHandler: {(placemarks, error) in
             if(error == nil){
                 for placemark in placemarks!{
-                location = placemark.location!
+                    location = placemark.location!
                 }
-                } else {
-                    self .placeTextField.text = "検索できませんでした"
-                }
-
-        
-        
+            } else {
+                self .placeTextField.text = "検索できませんでした"
+            }
+        //MARK: storeInfoに住所、名前、メモを保存する
             let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location)
-            
-            
             
             if (self.saveData.object(forKey: "storedata") != nil) {
                 var storeInfos = self.saveData.array(forKey: "storedata") as![[String: Any]]
@@ -72,25 +61,12 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
                 storeInfos.append(storeInfo.todictionary())
                 self.saveData.set(storeInfos, forKey: "storedata")
             }
-            
-            
-            
-            /*let location:CLLocation = placemark.location!
-             self.saveData.set(self.placeTextField.text, forKey: "place")
-             self.saveData.set(self.webTextField.text, forKey: "web")
-             self.saveData.set(self.nameTextField.text, forKey: "name")
-             self.saveData.set(location.coordinate.latitude, forKey: "latitude")
-             self.saveData.set(location.coordinate.longitude, forKey: "longtitude")*/
-            
-            
-            
             self.saveData.synchronize()
             
         })
         
         //alertを出す
         let alert:UIAlertController = UIAlertController(title:"保存",message: "保存が完了しました",preferredStyle: .alert)
-        
         alert.addAction(
             UIAlertAction(
                 title: "OK",
@@ -104,7 +80,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         present(alert, animated: true, completion: nil)
     }
     
-    
     func getNowClockString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd' 'HH:mm:ss"
@@ -113,7 +88,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool{
-        
         // キーボードを閉じる
         textField.resignFirstResponder()
         
@@ -179,7 +153,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             self.view.transform = CGAffineTransform.identity
         })
     }
-    
     
 }
 

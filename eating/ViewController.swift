@@ -20,22 +20,21 @@ class ViewController: UIViewController,MKMapViewDelegate{
     var nowLocation: CLLocation! = CLLocation()
     
     override func viewDidLoad() {
-
-        //MARK: 現在位置関連
-
-        //TODO: 現在位置を取得
+        //MARK: delegateの設定
+        mapView.delegate = self
+        
+        //MARK: 現在位置情報を取得
+        
         if CLLocationManager.locationServicesEnabled() {
             myLocationManager = CLLocationManager()
             myLocationManager.delegate = self
             myLocationManager.startUpdatingLocation()
         }
         
-        //中心点を表示
-        mapView.setCenter(nowLocation,animated:true)
-        mapView.delegate = self
+        //表示範囲を設定
         
         var region:MKCoordinateRegion = MKCoordinateRegion()
-        region.center = nowLocation
+        region.center = nowLocation.coordinate
         region.span.latitudeDelta = 0.1
         region.span.longitudeDelta = 0.1
         mapView.setRegion(region,animated:true)
@@ -48,55 +47,54 @@ class ViewController: UIViewController,MKMapViewDelegate{
             let tmpArray = saveData.array(forKey: "storedata") as? [[String : Any]]
             for i in tmpArray!{
                 storeInfos.append(toStoreInfo(dic: i))
-                
-                
             }
-            
         } else{
             storeInfos = []
-            
         }
-        
-        
-        
-        //アノテーションビューを返すメソッド
-        
-        // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
-        // Do any additional setup after loading the view, typically from a nib.
     }
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         for i in storeInfos {
-            
-            let annotation = MKPointAnnotation()
+            //MARK: ピンの吹き出し機能設定
+            let annotation = MKPointAnnotation()     //アノテーションビューを生成する
             let location: CLLocation = i.locate
-            annotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
-            annotation.title = ""
-            annotation.subtitle = ""
+            annotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)                           //アノテーションビューの座標を設定する
+            annotation.title = "ちょんまげ"                    //アノテーションビューのタイトルを設定する
+            annotation.subtitle = "ちょれい"                 //アノテーションビューのサブタイトルを設定する
             self.mapView.addAnnotation(annotation)
             
         }
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        //アノテーションビューを生成する。
-        let testPinView = MKPinAnnotationView()
-        
-        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
-        testPinView.annotation = annotation
-        
-        //アノテーションビューに色を設定する。
-        testPinView.pinTintColor = UIColor.blue
-        
-        //吹き出しの表示をONにする。
-        testPinView.canShowCallout = true
-        
+        //ピンの吹き出し機能設定
+        let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
+        testPinView.annotation = annotation        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
+        testPinView.canShowCallout = true          //吹き出しの表示をONにする。
+        //右ボタンをアノテーションビューに追加する。
+        let button2 = UIButton()
+        button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        button2.setTitle("削除", for: .normal)
+        button2.backgroundColor = UIColor.red
+        button2.setTitleColor(UIColor.white, for:.normal)
+        testPinView.rightCalloutAccessoryView = button2
         return testPinView
+    }
+    //吹き出しアクササリー押下時の呼び出しメソッド
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        
+        if(control == view.leftCalloutAccessoryView) {
+            
+            //右のボタンが押された場合はピンを消す。
+            mapView.removeAnnotation(view.annotation!)
+        }
     }
 }
 

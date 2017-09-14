@@ -28,18 +28,17 @@ class CellViewController: UIViewController, UITableViewDataSource {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    //cellの設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return  storeInfos.count
-    }
+    }      //cellの個数設定
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "shoplist", for: indexPath)
         cell.textLabel?.text = storeInfos[indexPath.row].name
         return cell
         
-    }
-
-    
-
+    }      //cellのテキスト
     /*
     // MARK: - Navigation
 
