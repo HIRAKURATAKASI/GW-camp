@@ -102,11 +102,12 @@
                     <navigationItem key="navigationItem" id="KzQ-Ox-eDE"/>
                     <connections>
                         <outlet property="table" destination="s2o-vs-Bzl" id="CXg-5E-07n"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="toViewController" id="Q2o-PD-04X"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWk-qa-K0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1406" y="-1324"/>
+            <point key="canvasLocation" x="996" y="-1836"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="Tyi-pJ-kK9">
@@ -212,4 +213,7 @@
     <resources>
         <image name="写真.JPG" width="991" height="718"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="Q2o-PD-04X"/>
+    </inferredMetricsTieBreakers>
 </document>
