@@ -17,10 +17,40 @@ class ViewController: UIViewController,MKMapViewDelegate{
     var backgroundTaskID : UIBackgroundTaskIdentifier = 0
     var myMapView: MKMapView!
     var LocationManager: CLLocationManager!
+    var selectedCoor: String?
+    var location: CLLocation!
+    var coordinate: CLLocationCoordinate2D!
+    
     
     override func viewDidLoad() {
         //MARK: delegateの設定
         mapView.delegate = self
+        
+        //表示位置
+        if selectedCoor == nil{
+            let coordinate = CLLocationCoordinate2DMake(35.696135, 139.768322)
+            
+            
+        }else{
+            let Geocoder:CLGeocoder = CLGeocoder()
+            Geocoder.geocodeAddressString(selectedCoor!, completionHandler: { (placemarks, error) -> Void in
+                var placemark: CLPlacemark!
+                
+                for Placemark in placemarks!{
+                    // locationにplacemark.locationをCLLocationとして代入する
+                    let location = placemark.location!
+                    
+                }
+            })
+            let coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
+            
+        }
+        
+        let span = MKCoordinateSpanMake(0.005, 0.005)
+        let region = MKCoordinateRegionMake(coordinate, span)
+        self.mapView.setRegion(region, animated:true)
+        
+        
         
         //MARK: 現在位置情報を取得
         
@@ -147,10 +177,6 @@ extension ViewController: CLLocationManagerDelegate {
             print("緯度:\(location.coordinate.latitude) 経度:\(location.coordinate.longitude) 取得時刻:\(location.timestamp.description)")
             let center = CLLocationCoordinate2DMake(location.coordinate.latitude, location.coordinate.longitude)
             
-            //表示範囲
-            let span = MKCoordinateSpanMake(0.1, 0.1)
-            let region = MKCoordinateRegionMake(center, span)
-            mapView.setRegion(region,animated:true)
         }
         
     }

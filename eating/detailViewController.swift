@@ -9,12 +9,14 @@
 import UIKit
 import  CoreLocation
 
-class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate {
+class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate ,UIPickerViewDelegate,UIPickerViewDataSource{
     @IBOutlet var placeTextField: UITextField!
     @IBOutlet var webTextField: UITextField!
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var haikeiimageView: UIImageView!
     var saveData: UserDefaults = UserDefaults.standard
+    var picker: UIPickerView = UIPickerView()
+    let pickerlist  = ["赤","青","黄色","オレンジ","ピンク"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +24,28 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         nameTextField.delegate = self
         placeTextField.delegate = self
         webTextField.delegate = self
+        picker.delegate = self
+        picker.dataSource = self
+        
+        
     }
+    func numberOfComponents(in pickerView: UIPickerView) -> Int{
+        //表示する列数
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int{
+        //アイテム表示個数を返す（選択肢の個数）
+        return pickerlist.count
+    }
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        //選択肢のタイトル
+        return pickerlist[row]
+    }
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        //選択時の処理
+        
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

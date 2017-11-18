@@ -8,6 +8,10 @@
 
 import UIKit
 
+// 必要に応じてimportします
+import CoreLocation
+
+
 class CellViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet var table : UITableView!
@@ -46,9 +50,7 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //cellが選択された時
     func tableView(_ tableView: UITableView,didSelectRowAt indexPath: IndexPath) {
        selectedCoordinate = storeInfos[indexPath.row].place
-        
-        
-        if selectedCoordinate != nil{
+    if selectedCoordinate != nil {
             // ViewController へ遷移するために Segue を呼び出す
             performSegue(withIdentifier: "toViewController",sender: nil)
         }
@@ -56,6 +58,10 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Segue 準備
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "toViewController") {
+            let VC: ViewController = (segue.destination as? ViewController)!
+            // SubViewController のselectedImgに選択された画像を設定する
+            VC.selectedCoor = selectedCoordinate
+
         
         }
     }
