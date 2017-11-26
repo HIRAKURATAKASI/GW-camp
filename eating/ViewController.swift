@@ -28,27 +28,36 @@ class ViewController: UIViewController,MKMapViewDelegate{
         
         //表示位置
         if selectedCoor == nil{
-            let coordinate = CLLocationCoordinate2DMake(35.696135, 139.768322)
+            coordinate = CLLocationCoordinate2DMake(35.696135, 139.768322)
             
             
         }else{
+            
             let Geocoder:CLGeocoder = CLGeocoder()
+            print("a")
             Geocoder.geocodeAddressString(selectedCoor!, completionHandler: { (placemarks, error) -> Void in
-                var placemark: CLPlacemark!
-                
-                for Placemark in placemarks!{
-                    // locationにplacemark.locationをCLLocationとして代入する
-                    let location = placemark.location!
-                    
+            print("ab")
+                if(error==nil){
+                    print("av")
+                    for placemark in placemarks!{
+                        // locationにplacemark.locationをCLLocationとして代入する
+                        self.location = placemark.location!
+                        self.coordinate = CLLocationCoordinate2DMake(self.location.coordinate.latitude,self.location.coordinate.longitude)
+                        let span = MKCoordinateSpanMake(0.005, 0.005)
+                        let region = MKCoordinateRegionMake(self.coordinate, span)
+                        self.mapView.setRegion(region, animated:true)
+                        print("af")
+                    }
+                } else {
+                    print("検索できませんでした！")
                 }
             })
-            let coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
             
-        }
         
-        let span = MKCoordinateSpanMake(0.005, 0.005)
-        let region = MKCoordinateRegionMake(coordinate, span)
-        self.mapView.setRegion(region, animated:true)
+        }
+
+
+        
         
         
         

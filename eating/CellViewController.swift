@@ -25,9 +25,20 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Do any additional setup after loading the view.
         table.dataSource = self
         table.delegate = self
-        tmpArray = saveData.array(forKey: "storedata") as! [[String : Any]]
-        for i in tmpArray{
-            storeInfos.append(toStoreInfo(dic: i))
+        print("あ")
+        print("い")
+        
+        if saveData.array(forKey: "storedata")==nil{
+            print("まだ情報が保存されてません")
+        }else{
+            print("情報を取得しました")
+            tmpArray = saveData.array(forKey: "storedata") as! [[String : Any]]
+            
+            for i in tmpArray{
+                storeInfos.append(toStoreInfo(dic: i))
+            }
+            
+
         }
     }
 
@@ -36,13 +47,25 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Dispose of any resources that can be recreated.
     }
     //cellの設定
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        return  storeInfos.count
+        var  number = 0
+        
+        if tmpArray==nil{
+          number =  0
+        }else{
+          number =  storeInfos.count
+        }
+        return number
     }      //cellの個数設定
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "shoplist", for: indexPath)
-        cell.textLabel?.text = storeInfos[indexPath.row].name
+        if tmpArray==nil{
+            print("検索できませんでした")
+        }else{
+            cell.textLabel?.text = storeInfos[indexPath.row].name
+        }
         return cell
         
     }

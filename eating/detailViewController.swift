@@ -15,7 +15,10 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var haikeiimageView: UIImageView!
     var saveData: UserDefaults = UserDefaults.standard
+    @IBOutlet weak var pickertextField: UITextField!
     var picker: UIPickerView = UIPickerView()
+    
+    
     let pickerlist  = ["赤","青","黄色","オレンジ","ピンク"]
     
     override func viewDidLoad() {
@@ -26,7 +29,17 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         webTextField.delegate = self
         picker.delegate = self
         picker.dataSource = self
+        picker.showsSelectionIndicator = true
         
+        let toolbar = UIToolbar(frame: CGRectMake(0, 0, 0, 35))
+        let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(detailViewController.done))
+        let cancelItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(detailViewController.cancel))
+        toolbar.setItems([cancelItem, doneItem], animated: true)
+        
+        self.pickertextField.inputView = picker
+        self.pickertextField.inputAccessoryView = toolbar
+        
+ 
         
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int{
@@ -43,8 +56,19 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         //選択時の処理
-        
+        self.pickertextField.text = pickerlist[row]
     }
+    func cancel() {
+        self.pickertextField.text = ""
+        self.pickertextField.endEditing(true)
+    }
+    func done() {
+        self.pickertextField.endEditing(true)
+    }
+    func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
+        return CGRect(x: x, y: y, width: width, height: height)
+    }
+
     
     
     override func viewWillAppear(_ animated: Bool) {
