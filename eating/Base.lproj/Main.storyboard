@@ -215,6 +215,7 @@
                     <connections>
                         <outlet property="haikeiimageView" destination="T87-xf-ez3" id="Dkh-d0-3c0"/>
                         <outlet property="nameTextField" destination="Lfc-cg-5dZ" id="PsH-b5-aDC"/>
+                        <outlet property="pickertextField" destination="3ZW-7J-3d5" id="el2-RG-Z1V"/>
                         <outlet property="placeTextField" destination="0md-Ps-eza" id="Iye-eS-Rvd"/>
                         <outlet property="webTextField" destination="3cw-DJ-jTC" id="Mna-1G-W9l"/>
                     </connections>

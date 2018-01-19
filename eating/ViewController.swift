@@ -21,7 +21,6 @@ class ViewController: UIViewController,MKMapViewDelegate{
     var location: CLLocation!
     var coordinate: CLLocationCoordinate2D!
     
-    
     override func viewDidLoad() {
         //MARK: delegateの設定
         mapView.delegate = self
@@ -82,10 +81,15 @@ class ViewController: UIViewController,MKMapViewDelegate{
         
         //MARK: saveData関連
         //saveDataにデータを入れる
-        if saveData.array(forKey: "storedata") != nil {
-            let tmpArray = saveData.array(forKey: "storedata") as? [[String : Any]]
+        if self.saveData.value(forKey: "storedata") != nil {
+        let storezip = self.saveData.value(forKey: "storedata") as?NSData
+        //self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: storeInfos), forKey: "storedata")
+
+            let tmpArray = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as? [[String : Any]]
+            
             for i in tmpArray!{
                 storeInfos.append(toStoreInfo(dic: i))
+               
             }
         } else{
             storeInfos = []
@@ -97,13 +101,15 @@ class ViewController: UIViewController,MKMapViewDelegate{
         
         for i in storeInfos {
             //MARK: ピンの吹き出し機能設定
-            let annotation = MKPointAnnotation()     //アノテーションビューを生成する
+            let annotation = PinMKPointAnnotation()     //アノテーションビューを生成する
             let location: CLLocation = i.locate
             annotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)                           //アノテーションビューの座標を設定する
             annotation.title = i.name                //アノテーションビューのタイトルを設定する
             annotation.subtitle = i.place            //アノテーションビューのサブタイトルを設定する
-            self.mapView.addAnnotation(annotation)
+            annotation.pinColor = i.pinColor
             
+            self.mapView.addAnnotation(annotation)
+    
         }
     }
     
@@ -116,7 +122,12 @@ class ViewController: UIViewController,MKMapViewDelegate{
         //ピンの吹き出し機能設定
         let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
         testPinView.annotation = annotation        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
-        testPinView.canShowCallout = true          //吹き出しの表示をONにする。
+        testPinView.canShowCallout = true          //吹き出しの表示をON にする。
+        //アノテーションビューに色を設定する。
+        if let test = annotation as? PinMKPointAnnotation {
+        testPinView.pinTintColor = test.pinColor
+        }
+
         //左ボタンをアノテーションビューに追加する。
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)

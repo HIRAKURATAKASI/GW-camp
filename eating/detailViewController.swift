@@ -17,9 +17,9 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     var saveData: UserDefaults = UserDefaults.standard
     @IBOutlet weak var pickertextField: UITextField!
     var picker: UIPickerView = UIPickerView()
+    var selectColor: UIColor!
     
-    
-    let pickerlist  = ["赤","青","黄色","オレンジ","ピンク"]
+    let pickerlist  = ["赤","青","黄色","オレンジ","紫色"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,8 +56,21 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         //選択時の処理
-        self.pickertextField.text = pickerlist[row]
+        switch pickerlist.count {
+        case 0:
+            selectColor = UIColor.red
+        case 1:
+            selectColor = UIColor.blue
+        case 2:
+            selectColor = UIColor.yellow
+        case 3:
+            selectColor = UIColor.orange
+        default:
+            selectColor = UIColor.purple
+        }
+        self.pickertextField.text = pickerlist[row]  //ここ！
     }
+    
     func cancel() {
         self.pickertextField.text = ""
         self.pickertextField.endEditing(true)
@@ -96,19 +109,26 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             } else {
                 self .placeTextField.text = "検索できませんでした"
             }
-        //MARK: storeInfoに住所、名前、メモを保存する
-            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location)
             
-            if (self.saveData.object(forKey: "storedata") != nil) {
-                var storeInfos = self.saveData.array(forKey: "storedata") as![[String: Any]]
+        //MARK: storeInfoに住所、名前、メモを保存する
+            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location,b: self.selectColor)
+            if (self.saveData.value(forKey: "storedata") != nil) {
+                let storezip = self.saveData.value(forKey: "storedata") as?NSData
+                var storeInfos = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as![[String: Any]]
                 storeInfos.append(storeInfo.todictionary())
-                self.saveData.set(storeInfos, forKey: "storedata")
+                self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: storeInfos), forKey: "storedata")
+                print("保存完了１")
             }else{
+                print("やっほ１")
                 var storeInfos: [[String: Any]] = []
+                print("やっほ２")
                 storeInfos.append(storeInfo.todictionary())
-                self.saveData.set(storeInfos, forKey: "storedata")
+                print("やっほ３")
+                self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: storeInfos), forKey: "storedata")
+                print("保存完了２")
             }
             self.saveData.synchronize()
+            print("更新完了")
             
         })
         
@@ -125,6 +145,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             )
         )
         present(alert, animated: true, completion: nil)
+        print("完了")
     }
     
     func getNowClockString() -> String {
