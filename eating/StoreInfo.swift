@@ -56,15 +56,15 @@ class StoreInfo {
         
         switch self.pinColor {
             case UIColor.red:
-            dic["pick"] = 0
+            dic["pick"] = "red"
             case UIColor.blue:
-            dic["pick"] = 1
+            dic["pick"] = "blue"
             case UIColor.yellow:
-            dic["pick"] = 2
+            dic["pick"] = "yellow"
             case UIColor.orange:
-            dic["pick"] = 3
+            dic["pick"] = "orange"
             default:
-            dic["pick"] = 4
+            dic["pick"] = "purple"
         }
 
         print("Dic3")
@@ -81,17 +81,17 @@ func toStoreInfo(dic: [String: Any]) -> StoreInfo{
     let latitude:CLLocationDegrees = CLLocationDegrees(exactly: dic["latitude"] as! Double)!
     let longitude:CLLocationDegrees = CLLocationDegrees(exactly: dic["longitude"] as! Double)!
     let locate:CLLocation = CLLocation(latitude: latitude, longitude: longitude)
-    let colorNumber = Int(exactly: dic["pick"] as! Int)!
+    let colorNumber:String = dic["pick"] as! String
     
     var pinColor: UIColor!
     switch colorNumber{
-    case 0:
+    case "red":
         pinColor = UIColor.red
-    case 1:
+    case "blue":
         pinColor = UIColor.blue
-    case 2:
+    case "yellow":
         pinColor = UIColor.yellow
-    case 3:
+    case "orange":
         pinColor = UIColor.orange
     default:
         pinColor = UIColor.purple
