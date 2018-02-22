@@ -18,7 +18,6 @@ class StoreInfo {
     var locate: CLLocation!
     
     
-    
     init(p: String,n: String,w: String,l: CLLocation,b: UIColor) {
         print("あ")
         place = p

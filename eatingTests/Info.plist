@@ -20,6 +20,8 @@
 	<string>1</string>
 	<key>CFPlugInDynamicRegisterFunction</key>
 	<string></string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string></string>
 	<key>privacy - Location When In Use Usage Description</key>
 	<string>このアプリは位置情報を取得します</string>
 </dict>

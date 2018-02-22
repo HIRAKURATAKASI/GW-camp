@@ -39,7 +39,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         self.pickertextField.inputView = picker
         self.pickertextField.inputAccessoryView = toolbar
         
- 
+        
         
     }
     func numberOfComponents(in pickerView: UIPickerView) -> Int{
@@ -56,14 +56,14 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         //選択時の処理
-        switch pickerlist.count {
-        case 0:
+        switch pickerlist[row] {
+        case "赤":
             selectColor = UIColor.red
-        case 1:
+        case "青":
             selectColor = UIColor.blue
-        case 2:
+        case "黄色":
             selectColor = UIColor.yellow
-        case 3:
+        case "オレンジ":
             selectColor = UIColor.orange
         default:
             selectColor = UIColor.purple
@@ -81,7 +81,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     func CGRectMake(_ x: CGFloat, _ y: CGFloat, _ width: CGFloat, _ height: CGFloat) -> CGRect {
         return CGRect(x: x, y: y, width: width, height: height)
     }
-
+    
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,10 +107,10 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
                     location = placemark.location!
                 }
             } else {
-                self .placeTextField.text = "検索できませんでした"
+                self.placeTextField.text = "検索できませんでした"
             }
             
-        //MARK: storeInfoに住所、名前、メモを保存する
+            //MARK: storeInfoに住所、名前、メモを保存する
             let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location,b: self.selectColor)
             if (self.saveData.value(forKey: "storedata") != nil) {
                 let storezip = self.saveData.value(forKey: "storedata") as?NSData
@@ -221,6 +221,21 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             self.view.transform = CGAffineTransform.identity
         })
     }
+    // ファイルを保存するURLを返す
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+    
+    // ファイルに画像を保存する
+    func saveImageToDocumentsDirectory(image: UIImage, name: String) {
+        if let data = UIImagePNGRepresentation(image) {
+            let filename = getDocumentsDirectory().appendingPathComponent(name)
+            try? data.write(to: filename)
+        }
+    }
+    
     
 }
 
