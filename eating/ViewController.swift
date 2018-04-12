@@ -11,19 +11,18 @@ import MapKit
 import CoreLocation
 import UserNotifications
 
-class ViewController: UIViewController,MKMapViewDelegate,CLLocationManagerDelegate{
+class ViewController: UIViewController,MKMapViewDelegate {
     @IBOutlet var mapView: MKMapView!
     var saveData: UserDefaults = UserDefaults.standard
     var storeInfos: [StoreInfo] = []
     var backgroundTaskID : UIBackgroundTaskIdentifier = 0
     var myMapView: MKMapView!
-    var LocationManager: CLLocationManager!
+    var locationManager: CLLocationManager!
     var selectedCoor: String?
     var location: CLLocation!
     var coordinate: CLLocationCoordinate2D!
     var myLocationManager:CLLocationManager!
-    let alert: UIAlertController = UIAlertController(title: "注意！", message: "通知を拒否すると近くの店を探すことができません[設定]から通知を許可してください", preferredStyle: <#T##UIAlertControllerStyle#>)
-
+    let alert: UIAlertController = UIAlertController(title: "注意！", message: "通知を拒否すると近くの店を探すことができません[設定]から通知を許可してください", preferredStyle: .alert)
     
     // 緯度表示用のラベル
     var nowLatitude:CLLocation!
@@ -31,6 +30,9 @@ class ViewController: UIViewController,MKMapViewDelegate,CLLocationManagerDelega
     var nowLongitude:CLLocation!
     
     override func viewDidLoad() {
+        locationManager = CLLocationManager() // インスタンスの生成
+        locationManager.delegate = self // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
+
         // 通知を使用可能にする設定
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge], completionHandler: {
@@ -42,57 +44,29 @@ class ViewController: UIViewController,MKMapViewDelegate,CLLocationManagerDelega
             
             if granted {
                 debugPrint("通知許可")
-                
             } else {
                 debugPrint("通知拒否")
                 //UIAlertViewを出しましょう。
                 //調べたら出てくる。メモ帳にある
-                self.alert.addAction(
-                UIAlertAction(
+            self.alert.addAction(
+               UIAlertAction(
                     title: "OK!",
                     style: .default,
-                    handler: { action in
+                   handler: { action in
                         //ボタンが押された時のどうさ
-                    print("OK!")
+                  print("OK!")
                 }
-                    )
-                )
+                  )
+               )
 
-                present(self.alert, animated: true, completion: nil)
+               self.present(self.alert, animated: true, completion: nil)
                 
             }
         })
         
         
         
-        // 現在地の取得.
-        
-        myLocationManager = CLLocationManager()
-        myLocationManager.delegate = self
-        // セキュリティ認証のステータスを取得.
-        
-        let status = CLLocationManager.authorizationStatus()
-        
-        
-        
-        // まだ認証が得られていない場合は、認証ダイアログを表示.
-        
-        if(status == CLAuthorizationStatus.notDetermined) {
-            print("didChangeAuthorizationStatus:\(status)");
-            // まだ承認が得られていない場合は、認証ダイアログを表示.
-            self.myLocationManager.requestAlwaysAuthorization()
-        }
-        
-        
-        // 取得精度の設定.
-        myLocationManager.desiredAccuracy = kCLLocationAccuracyBest
-        // 取得頻度の設定.
-        myLocationManager.distanceFilter = 100
-        
-        //MARK: delegateの設定
-        mapView.delegate = self
-        
-        //表示位置
+          //表示位置
         if selectedCoor == nil{
             coordinate = CLLocationCoordinate2DMake(35.696135, 139.768322)
             
@@ -222,58 +196,74 @@ class ViewController: UIViewController,MKMapViewDelegate,CLLocationManagerDelega
             mapView.removeAnnotation(view.annotation!)
         }
     }
-    
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        print("didChangeAuthorizationStatus");
-        // 認証のステータスをログで表示.
-        var statusStr = "";
-        switch (status) {
-            
-        case .notDetermined:
-            
-            statusStr = "NotDetermined"
-            
-        case .restricted:
-            
-            statusStr = "Restricted"
-            
-        case .denied:
-            
-            statusStr = "Denied"
-            
-        case .authorizedAlways:
-            
-            statusStr = "AuthorizedAlways"
-            
-        case .authorizedWhenInUse:
-            
-            statusStr = "AuthorizedWhenInUse"
-            
+func applicationDidEnterBackground(_ application: UIApplication) {
+    //通知設定に必要なクラスをインスタンス化
+    //トリガーの設定
+    var trigger: UNNotificationTrigger
+    for i in storeInfos{
+        let triggercoordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
+        let triggerregion = CLCircularRegion(center: coordinate, radius: 100.0, identifier: "description")
+        trigger = UNLocationNotificationTrigger(region: triggerregion, repeats: false)
+        let content = UNMutableNotificationContent()
+        content.title = i.place
+        content.body = "近くに"+i.place+"があります！"
+        content.sound = UNNotificationSound.default()
+        if let url = Bundle.main.url(forResource: "image", withExtension: "png") {
+            let attachment = try? UNNotificationAttachment(identifier: "attachment", url: url, options: nil)
+            if let attachment = attachment {
+                content.attachments = [attachment]
+            }
+            // categoryIdentifierを設定
+            content.categoryIdentifier = "attachment"
         }
+        let request = UNNotificationRequest(identifier: "attachment",
+                                            content: content,
+                                            trigger: trigger)
         
-        print(" CLAuthorizationStatus: \(statusStr)")
-        
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
-    // ボタンイベントのセット.
+    }
     
-    func onClickMyButton(sender: UIButton){
-        
-        // 現在位置の取得を開始.
-        
-        myLocationManager.startUpdatingLocation()
-        // 位置情報取得に成功したときに呼び出されるデリゲート.
-        
-        func locationManager(manager: CLLocationManager!,didUpdateLocations locations: [AnyObject]!){
-            // 緯度・経度の表
-            
-        }
-        
-        // 位置情報取得に失敗した時に呼び出されるデリゲート.
-        
-        func locationManager(manager: CLLocationManager!,didFailWithError error: NSError!){
-            print("error")
-        }
-    }    
+    
 }
 
-
+extension ViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        
+        switch status {
+        case .authorizedWhenInUse:
+            // 位置情報の取得開始
+            
+            break
+            
+        case .notDetermined:
+            print("ユーザーはこのアプリケーションに関してまだ選択を行っていません")
+            manager.startUpdatingLocation()
+            // 許可を求めるコードを記述する（後述）
+            break
+        case .denied:
+            print("ローケーションサービスの設定が「無効」になっています (ユーザーによって、明示的に拒否されています）")
+            // 「設定 > プライバシー > 位置情報サービス で、位置情報サービスの利用を許可して下さい」を表示する
+            break
+        case .restricted:
+            print("このアプリケーションは位置情報サービスを使用できません(ユーザによって拒否されたわけではありません)")
+            // 「このアプリは、位置情報を取得できないために、正常に動作できません」を表示する
+            break
+        case .authorizedAlways:
+            print("常時、位置情報の取得が許可されています。")
+            // 位置情報取得の開始処理
+            break
+        case .authorizedWhenInUse:
+            print("起動時のみ、位置情報の取得が許可されています。")
+            // 位置情報取得の開始処理
+            break
+        }
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            
+            for location in locations {
+                print("緯度:\(location.coordinate.latitude) 経度:\(location.coordinate.longitude) 取得時刻:\(location.timestamp.description)")
+            }
+        }
+    }
+    
+}

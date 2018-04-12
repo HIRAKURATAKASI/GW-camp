@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E4FC6542010AEDE00F37108 /* PinMKPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */; };
+		4E4FC6922048103700F37108 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4FC6912048103700F37108 /* CoreLocation.framework */; };
 		4E995A9C1EFBDDE300CF7479 /* StoreInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */; };
 		4EAD3A721EB9B62D00812438 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3A711EB9B62D00812438 /* AppDelegate.swift */; };
 		4EAD3A741EB9B62D00812438 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3A731EB9B62D00812438 /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinMKPointAnnotation.swift; sourceTree = "<group>"; };
+		4E4FC6912048103700F37108 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreInfo.swift; sourceTree = "<group>"; };
 		4EAD3A6E1EB9B62D00812438 /* eating.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eating.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EAD3A711EB9B62D00812438 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E4FC6922048103700F37108 /* CoreLocation.framework in Frameworks */,
 				4EAD3AA11EB9B9C200812438 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +150,7 @@
 		4EAD3A9F1EB9B9C200812438 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4E4FC6912048103700F37108 /* CoreLocation.framework */,
 				4EAD3AA01EB9B9C200812438 /* MapKit.framework */,
 			);
 			name = Frameworks;
