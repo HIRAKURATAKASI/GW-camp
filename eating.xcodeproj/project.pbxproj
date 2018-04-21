@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E4176A5208B2A4F0065FCE9 /* no image wow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E4176A4208B2A4F0065FCE9 /* no image wow.png */; };
 		4E4FC6542010AEDE00F37108 /* PinMKPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */; };
 		4E4FC6922048103700F37108 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4FC6912048103700F37108 /* CoreLocation.framework */; };
 		4E995A9C1EFBDDE300CF7479 /* StoreInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E4176A4208B2A4F0065FCE9 /* no image wow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no image wow.png"; path = "../../../../../Applications/no image wow.png"; sourceTree = "<group>"; };
 		4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinMKPointAnnotation.swift; sourceTree = "<group>"; };
 		4E4FC6912048103700F37108 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4E995A9B1EFBDDE300CF7479 /* StoreInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreInfo.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				4EAD3A751EB9B62D00812438 /* Main.storyboard */,
 				4EAD3A781EB9B62D00812438 /* Assets.xcassets */,
 				4EAD3A7A1EB9B62D00812438 /* LaunchScreen.storyboard */,
+				4E4176A4208B2A4F0065FCE9 /* no image wow.png */,
 				4EAD3A7D1EB9B62D00812438 /* Info.plist */,
 				4EAD3AA21EBABB1A00812438 /* detailViewController.swift */,
 				4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */,
@@ -269,6 +272,7 @@
 				4EAD3A7C1EB9B62D00812438 /* LaunchScreen.storyboard in Resources */,
 				4EAD3AA51EBB035E00812438 /* 写真.JPG in Resources */,
 				4EAD3A791EB9B62D00812438 /* Assets.xcassets in Resources */,
+				4E4176A5208B2A4F0065FCE9 /* no image wow.png in Resources */,
 				4EAD3A771EB9B62D00812438 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -18,7 +18,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     @IBOutlet weak var pickertextField: UITextField!
     var picker: UIPickerView = UIPickerView()
     var selectColor: UIColor!
-    
+    var imagefile: String = ""
     let pickerlist  = ["赤","青","黄色","オレンジ","紫色"]
     
     override func viewDidLoad() {
@@ -111,7 +111,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             }
             
             //MARK: storeInfoに住所、名前、メモを保存する
-            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location,b: self.selectColor)
+            let storeInfo = StoreInfo(p: self.placeTextField.text!, n: self.nameTextField.text!, w: self.webTextField.text!, l: location,b: self.selectColor,i: self.imagefile)
             if (self.saveData.value(forKey: "storedata") != nil) {
                 let storezip = self.saveData.value(forKey: "storedata") as?NSData
                 var storeInfos = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as![[String: Any]]
@@ -150,7 +150,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
     
     func getNowClockString() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd' 'HH:mm:ss"
+        formatter.dateFormat = "yyyyMMddHHmmss"
         let now = Date()
         return formatter.string(from: now)
     }
@@ -169,10 +169,12 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         imagePickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
-        
         //フォトライブラリを呼び出す
         self.present(imagePickerController,animated: true, completion: nil)
         
+        
+        imagefile = getNowClockString()+".png"
+        saveImageToDocumentsDirectory(image: haikeiimageView.image!, name:imagefile)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info:
@@ -186,6 +188,7 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         
         //フォトライブラリを閉じる
         picker.dismiss(animated: true, completion: nil)
+        
         
     }
     func configureObserver(){
@@ -235,7 +238,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
             try? data.write(to: filename)
         }
     }
-    
     
 }
 

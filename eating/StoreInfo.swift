@@ -16,9 +16,10 @@ class StoreInfo {
     var web: String = ""
     var pinColor: UIColor
     var locate: CLLocation!
+    var imagename: String = ""
     
     
-    init(p: String,n: String,w: String,l: CLLocation,b: UIColor) {
+    init(p: String,n: String,w: String,l: CLLocation,b: UIColor,i: String) {
         print("あ")
         place = p
         print("い")
@@ -30,14 +31,17 @@ class StoreInfo {
         print("お")
         pinColor = b
         print("か")
+        imagename = i
+        
         
     }
     
-    func setValue(p: String,n: String,w: String,b: UIColor) {
+    func setValue(p: String,n: String,w: String,b: UIColor,i: String) {
         place = p
         name = n
         web = w
         pinColor = b
+        imagename = i
     }
     
     func todictionary()->[String:Any]{
@@ -51,6 +55,7 @@ class StoreInfo {
         dic["latitude"] = latitude
         dic["longitude"] = longitude
         dic["pick"] = self.pinColor
+        dic["imagename"] = self.imagename
         print("Dic2")
         
         switch self.pinColor {
@@ -98,7 +103,7 @@ func toStoreInfo(dic: [String: Any]) -> StoreInfo{
         
     }
     
-    let storeInfo = StoreInfo(p: dic["place"] as! String , n: dic["name"] as! String , w: dic["web"] as! String, l:locate,b: pinColor)
+    let storeInfo = StoreInfo(p: dic["place"] as! String , n: dic["name"] as! String , w: dic["web"] as! String, l:locate,b: pinColor,i:dic["imagename"] as! String)
     return storeInfo
     
 }

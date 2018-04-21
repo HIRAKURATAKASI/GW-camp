@@ -32,7 +32,7 @@ class ViewController: UIViewController,MKMapViewDelegate {
     override func viewDidLoad() {
         locationManager = CLLocationManager() // インスタンスの生成
         locationManager.delegate = self // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
-
+        
         // 通知を使用可能にする設定
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge], completionHandler: {
@@ -48,25 +48,25 @@ class ViewController: UIViewController,MKMapViewDelegate {
                 debugPrint("通知拒否")
                 //UIAlertViewを出しましょう。
                 //調べたら出てくる。メモ帳にある
-            self.alert.addAction(
-               UIAlertAction(
-                    title: "OK!",
-                    style: .default,
-                   handler: { action in
-                        //ボタンが押された時のどうさ
-                  print("OK!")
-                }
-                  )
-               )
-
-               self.present(self.alert, animated: true, completion: nil)
+                self.alert.addAction(
+                    UIAlertAction(
+                        title: "OK!",
+                        style: .default,
+                        handler: { action in
+                            //ボタンが押された時のどうさ
+                            print("OK!")
+                    }
+                    )
+                )
+                
+                self.present(self.alert, animated: true, completion: nil)
                 
             }
         })
         
         
         
-          //表示位置
+        //表示位置
         if selectedCoor == nil{
             coordinate = CLLocationCoordinate2DMake(35.696135, 139.768322)
             
@@ -153,31 +153,33 @@ class ViewController: UIViewController,MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        //ピンの吹き出し機能設定
-        let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
-        testPinView.annotation = annotation        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
-        testPinView.canShowCallout = true          //吹き出しの表示をON にする。
-        //アノテーションビューに色を設定する。
-        if let test = annotation as? PinMKPointAnnotation {
-            testPinView.pinTintColor = test.pinColor
+        for i in storeInfos{
+            //ピンの吹き出し機能設定
+            let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
+            testPinView.annotation = annotation        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
+            testPinView.canShowCallout = true          //吹き出しの表示をON にする。
+            //アノテーションビューに色を設定する。
+            if let test = annotation as? PinMKPointAnnotation {
+                testPinView.pinTintColor = test.pinColor
+            }
+
+            
+            
+            //左ボタンをアノテーションビューに追加する。
+            let pinimageView = UIImageView()
+            pinimageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            pinimageView.image = getImage(imagefile: i.imagename)
+            testPinView.leftCalloutAccessoryView = pinimageView
+            
+            //右ボタンをアノテーションビューに追加する。
+            let button2 = UIButton()                   //ボタンを定義
+            button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)//座標、大きさを設定する
+            button2.setTitle("削除", for: .normal)//ボタンの名前
+            button2.backgroundColor = UIColor.red//ボタンの色
+            button2.setTitleColor(UIColor.white, for:.normal)//バックカラー
+            testPinView.rightCalloutAccessoryView = button2
+            return testPinView
         }
-        
-        //左ボタンをアノテーションビューに追加する。
-        let button = UIButton()
-        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        button.setTitle("色", for: .normal)
-        button.setTitleColor(UIColor.black, for:.normal)
-        button.backgroundColor = UIColor.yellow
-        testPinView.leftCalloutAccessoryView = button
-        
-        //右ボタンをアノテーションビューに追加する。
-        let button2 = UIButton()                   //ボタンを定義
-        button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)//座標、大きさを設定する
-        button2.setTitle("削除", for: .normal)//ボタンの名前
-        button2.backgroundColor = UIColor.red//ボタンの色
-        button2.setTitleColor(UIColor.white, for:.normal)//バックカラー
-        testPinView.rightCalloutAccessoryView = button2
-        return testPinView
     }
     //吹き出しアクササリー押下時の呼び出しメソッド
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
@@ -196,32 +198,57 @@ class ViewController: UIViewController,MKMapViewDelegate {
             mapView.removeAnnotation(view.annotation!)
         }
     }
-func applicationDidEnterBackground(_ application: UIApplication) {
-    //通知設定に必要なクラスをインスタンス化
-    //トリガーの設定
-    var trigger: UNNotificationTrigger
-    for i in storeInfos{
-        let triggercoordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
-        let triggerregion = CLCircularRegion(center: coordinate, radius: 100.0, identifier: "description")
-        trigger = UNLocationNotificationTrigger(region: triggerregion, repeats: false)
-        let content = UNMutableNotificationContent()
-        content.title = i.place
-        content.body = "近くに"+i.place+"があります！"
-        content.sound = UNNotificationSound.default()
-        if let url = Bundle.main.url(forResource: "image", withExtension: "png") {
-            let attachment = try? UNNotificationAttachment(identifier: "attachment", url: url, options: nil)
-            if let attachment = attachment {
-                content.attachments = [attachment]
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        //通知設定に必要なクラスをインスタンス化
+        //トリガーの設定
+        var trigger: UNNotificationTrigger
+        for i in storeInfos{
+            let triggercoordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)
+            let triggerregion = CLCircularRegion(center: coordinate, radius: 100.0, identifier: "description")
+            trigger = UNLocationNotificationTrigger(region: triggerregion, repeats: false)
+            let content = UNMutableNotificationContent()
+            content.title = i.place
+            content.body = "近くに"+i.place+"があります！"
+            content.sound = UNNotificationSound.default()
+            if let url = Bundle.main.url(forResource: "image", withExtension: "png") {
+                let attachment = try? UNNotificationAttachment(identifier: "attachment", url: url, options: nil)
+                if let attachment = attachment {
+                    content.attachments = [attachment]
+                }
+                // categoryIdentifierを設定
+                content.categoryIdentifier = "attachment"
             }
-            // categoryIdentifierを設定
-            content.categoryIdentifier = "attachment"
+            let request = UNNotificationRequest(identifier: "attachment",
+                                                content: content,
+                                                trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
         }
-        let request = UNNotificationRequest(identifier: "attachment",
-                                            content: content,
-                                            trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
+    // ファイルを保存するURLを返す
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
+    }
+    
+    // ファイルに画像を保存する
+    func saveImageToDocumentsDirectory(image: UIImage, name: String) {
+        if let data = UIImagePNGRepresentation(image) {
+            let filename = getDocumentsDirectory().appendingPathComponent(name)
+            try? data.write(to: filename)
+        }
+    }
+
+    func getImage(imagefile: String) -> UIImage?{
+        let filename = getDocumentsDirectory().appendingPathComponent(imagefile)
+        do {
+            let data = try Data(contentsOf: filename)
+            return UIImage(data: data)
+        }catch{
+            return nil
+        }
+        
     }
     
     
