@@ -147,7 +147,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         present(alert, animated: true, completion: nil)
         print("完了")
     }
-    
     func getNowClockString() -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMddHHmmss"
@@ -173,8 +172,6 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         self.present(imagePickerController,animated: true, completion: nil)
         
         
-        imagefile = getNowClockString()+".png"
-        saveImageToDocumentsDirectory(image: haikeiimageView.image!, name:imagefile)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info:
@@ -185,6 +182,10 @@ class detailViewController: UIViewController ,UITextFieldDelegate,UINavigationCo
         
         //そのimageを背景に設定する
         haikeiimageView.image = image
+        
+        imagefile = getNowClockString()+".png"
+        saveImageToDocumentsDirectory(image: haikeiimageView.image!, name:imagefile)
+
         
         //フォトライブラリを閉じる
         picker.dismiss(animated: true, completion: nil)

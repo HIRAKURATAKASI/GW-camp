@@ -32,7 +32,7 @@ class ViewController: UIViewController,MKMapViewDelegate {
     override func viewDidLoad() {
         locationManager = CLLocationManager() // インスタンスの生成
         locationManager.delegate = self // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
-        
+        mapView.delegate = self
         // 通知を使用可能にする設定
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound, .badge], completionHandler: {
@@ -96,13 +96,6 @@ class ViewController: UIViewController,MKMapViewDelegate {
             
         }
         
-        
-        
-        
-        
-        
-        
-        
         /*
          //表示範囲を設定
          let myLat: CLLocationDegrees = 37.506804
@@ -140,9 +133,11 @@ class ViewController: UIViewController,MKMapViewDelegate {
             annotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)                           //アノテーションビューの座標を設定する
             annotation.title = i.name                //アノテーションビューのタイトルを設定する
             annotation.subtitle = i.place            //アノテーションビューのサブタイトルを設定する
-            annotation.pinColor = i.pinColor
-            
-            self.mapView.addAnnotation(annotation)
+            annotation.pinColor = i.pinColor         //アノテーションビューのpincolorを設定する
+            annotation.imageName = getImage(imagefile: i.imagename)//アノテーションビューの画像を設定する
+            annotation.ID = i.ID                     //アンテーションビューのIDを設定する
+            self.mapView.addAnnotation(annotation)   //ピンが押された時の動きを設定
+            print(i.ID)
             
         }
     }
@@ -153,48 +148,56 @@ class ViewController: UIViewController,MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        for i in storeInfos{
-            //ピンの吹き出し機能設定
-            let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
-            testPinView.annotation = annotation        //アノテーションビューに座標、タイトル、サブタイトルを設定する。
-            testPinView.canShowCallout = true          //吹き出しの表示をON にする。
-            //アノテーションビューに色を設定する。
-            if let test = annotation as? PinMKPointAnnotation {
-                testPinView.pinTintColor = test.pinColor
-            }
-
-            
-            
-            //左ボタンをアノテーションビューに追加する。
-            let pinimageView = UIImageView()
-            pinimageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-            pinimageView.image = getImage(imagefile: i.imagename)
-            testPinView.leftCalloutAccessoryView = pinimageView
-            
-            //右ボタンをアノテーションビューに追加する。
-            let button2 = UIButton()                   //ボタンを定義
-            button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)//座標、大きさを設定する
-            button2.setTitle("削除", for: .normal)//ボタンの名前
-            button2.backgroundColor = UIColor.red//ボタンの色
-            button2.setTitleColor(UIColor.white, for:.normal)//バックカラー
-            testPinView.rightCalloutAccessoryView = button2
-            return testPinView
-        }
+        //annotation = PinPointAnnotation ではなかった時の処理
+        guard let pinInfo = annotation as? PinMKPointAnnotation else { return nil }
+        
+        //ピンの吹き出し機能設定
+        let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
+        testPinView.annotation = pinInfo       //アノテーションビューに座標、タイトル、サブタイトルを設定する。
+        testPinView.canShowCallout = true          //吹き出しの表示をON にする。
+        //アノテーションビューに色を設定する。
+        
+        testPinView.pinTintColor = pinInfo.pinColor
+        
+        //左ボタンをアノテーションビューに追加する。
+        let pinimageView = UIImageView()
+        pinimageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        pinimageView.image = pinInfo.imageName!
+        testPinView.leftCalloutAccessoryView = pinimageView
+        
+        //右ボタンをアノテーションビューに追加する。
+        let button2 = UIButton()                   //ボタンを定義
+        button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)//座標、大きさを設定する
+        button2.setTitle("削除", for: .normal)//ボタンの名前
+        button2.backgroundColor = UIColor.red//ボタンの色
+        button2.setTitleColor(UIColor.white, for:.normal)//バックカラー
+        testPinView.rightCalloutAccessoryView = button2
+        return testPinView
+        
     }
     //吹き出しアクササリー押下時の呼び出しメソッド
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         
-        if(control == view.leftCalloutAccessoryView) {
-            //左のボタンが押された場合はピンの色をランダムに変更する。
-            if let pinView = view as? MKPinAnnotationView {
-                pinView.pinTintColor = UIColor(red: CGFloat(drand48()),
-                                               green: CGFloat(drand48()),
-                                               blue: CGFloat(drand48()),
-                                               alpha: 1.0)
-            }
-        } else {
-            
+        if(control == view.rightCalloutAccessoryView) {
+            var removeindex:Int!
             //右のボタンが押された場合はピンを消す。
+            guard let pinInfo = view.annotation as? PinMKPointAnnotation else {
+                return
+            }
+            for (index, storeInfonumber) in storeInfos.enumerated(){
+                if storeInfonumber.ID == pinInfo.ID{
+                    removeindex = index
+                    break
+                }
+            }
+            
+            storeInfos.remove(at: removeindex)
+            
+            let dictionaries = storeInfos.map{ $0.todictionary() }
+
+        
+            self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: dictionaries), forKey: "storedata")
+            print("保存完了１")
             mapView.removeAnnotation(view.annotation!)
         }
     }
@@ -239,14 +242,14 @@ class ViewController: UIViewController,MKMapViewDelegate {
             try? data.write(to: filename)
         }
     }
-
+    
     func getImage(imagefile: String) -> UIImage?{
         let filename = getDocumentsDirectory().appendingPathComponent(imagefile)
         do {
             let data = try Data(contentsOf: filename)
             return UIImage(data: data)
         }catch{
-            return nil
+            return  #imageLiteral(resourceName: "no image wow.png")
         }
         
     }

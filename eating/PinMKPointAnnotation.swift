@@ -12,5 +12,6 @@ import MapKit
 class PinMKPointAnnotation: MKPointAnnotation {
     //ピンの色
     var pinColor:UIColor!
-
+    var imageName:UIImage!
+    var ID:String!
 }

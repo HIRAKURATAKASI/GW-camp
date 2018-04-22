@@ -17,6 +17,7 @@ class StoreInfo {
     var pinColor: UIColor
     var locate: CLLocation!
     var imagename: String = ""
+    var ID: String!
     
     
     init(p: String,n: String,w: String,l: CLLocation,b: UIColor,i: String) {
@@ -33,9 +34,34 @@ class StoreInfo {
         print("か")
         imagename = i
         
+        ID = date()
+    }
+    
+    init(id: String, p: String,n: String,w: String,l: CLLocation,b: UIColor,i: String) {
+        place = p
+
+        name = n
+
+        web = w
+
+        locate = l
+
+        pinColor = b
+
+        imagename = i
+        
+        ID = id
         
     }
     
+    func date() -> String{
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMddHHmmss"
+        let now = Date()
+        return formatter.string(from: now)
+
+    }
+
     func setValue(p: String,n: String,w: String,b: UIColor,i: String) {
         place = p
         name = n
@@ -57,6 +83,7 @@ class StoreInfo {
         dic["pick"] = self.pinColor
         dic["imagename"] = self.imagename
         print("Dic2")
+        dic["ID"] = ID
         
         switch self.pinColor {
             case UIColor.red:
@@ -99,11 +126,10 @@ func toStoreInfo(dic: [String: Any]) -> StoreInfo{
         pinColor = UIColor.orange
     default:
         pinColor = UIColor.purple
-        
-        
     }
     
-    let storeInfo = StoreInfo(p: dic["place"] as! String , n: dic["name"] as! String , w: dic["web"] as! String, l:locate,b: pinColor,i:dic["imagename"] as! String)
+    let storeInfo = StoreInfo(id: dic["ID"] as! String, p:dic["name"] as! String, n: dic["name"] as! String, w: dic["web"] as! String, l: locate, b: pinColor, i: dic["imagename"] as! String)
+//   let storeInfo = StoreInfo(p: dic["place"] as! String , n: dic["name"] as! String , w: dic["web"] as! String, l:locate,b: pinColor,i:dic["imagename"] as! String)
     return storeInfo
     
 }

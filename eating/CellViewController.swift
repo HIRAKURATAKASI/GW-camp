@@ -25,26 +25,20 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Do any additional setup after loading the view.
         table.dataSource = self
         table.delegate = self
-        
-        if saveData.array(forKey: "storedata")==nil{
-            print("まだ情報が保存されてません")
-        }else{
-            print("情報を取得しました")
+        if self.saveData.value(forKey: "storedata") != nil {
             let storezip = self.saveData.value(forKey: "storedata") as?NSData
             //self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: storeInfos), forKey: "storedata")
             
-             tmpArray = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as? [[String : Any]]
+            let tmpArray = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as? [[String : Any]]
             
-
-        // tmpArray = saveData.array(forKey: "storedata") as! [[String : Any]]
-        //let tmpArray = NSKeyedUnarchiver.unarchiveObject(with: storezip as! Data) as? [[String : Any]]
-
             for i in tmpArray!{
                 storeInfos.append(toStoreInfo(dic: i))
+                
             }
-            
-
+        } else{
+            storeInfos = []
         }
+    
     }
 
     override func didReceiveMemoryWarning() {
