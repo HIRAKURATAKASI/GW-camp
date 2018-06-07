@@ -53,7 +53,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="373.60000000000002" y="-618.44077961019491"/>
+            <point key="canvasLocation" x="577" y="-618"/>
         </scene>
         <!--Cell View Controller-->
         <scene sceneID="kAs-Wo-Ulh">
@@ -101,6 +101,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="KzQ-Ox-eDE"/>
                     <connections>
+                        <outlet property="shoplistTableView" destination="s2o-vs-Bzl" id="wVo-V7-CVP"/>
                         <outlet property="table" destination="s2o-vs-Bzl" id="CXg-5E-07n"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="toViewController" id="Q2o-PD-04X"/>
                     </connections>

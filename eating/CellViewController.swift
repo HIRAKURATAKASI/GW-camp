@@ -33,7 +33,7 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             for i in tmpArray!{
                 storeInfos.append(toStoreInfo(dic: i))
-                
+                print("い")
             }
         } else{
             storeInfos = []
@@ -48,19 +48,23 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //cellの設定
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        var  number = 0
+        var  number: Int?
         
-        if tmpArray==nil{
+        if storeInfos==nil{
           number =  0
         }else{
           number =  storeInfos.count
+            print("Cell個数")
         }
-        return number
+        print(number!)
+        return number!
+
     }      //cellの個数設定
     
+    @IBOutlet weak var shoplistTableView: UITableView!
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "shoplist", for: indexPath)
-        if tmpArray==nil{
+        if storeInfos==nil{
             print("検索できませんでした")
         }else{
             cell.textLabel?.text = storeInfos[indexPath.row].name
@@ -73,9 +77,18 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView,didSelectRowAt indexPath: IndexPath) {
        selectedCoordinate = storeInfos[indexPath.row].place
     if selectedCoordinate != nil {
-            // ViewController へ遷移するために Segue を呼び出す
+    // ViewController へ遷移するために Segue を呼び出す
             performSegue(withIdentifier: "toViewController",sender: nil)
         }
+    }
+    @IBAction func edit(sender: AnyObject) {
+        //通常モードと編集モードを切り替える。
+        if(shoplistTableView.isEditing == true) {
+            shoplistTableView.isEditing = false
+        } else {
+           shoplistTableView.isEditing = true
+        }
+
     }
     // Segue 準備
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {

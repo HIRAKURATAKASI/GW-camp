@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E059E8220B6CC48006484B7 /* PinView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E059E8120B6CC48006484B7 /* PinView.xib */; };
+		4E059E8420B6CD43006484B7 /* Empty.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E059E8320B6CD43006484B7 /* Empty.xib */; };
 		4E4176A5208B2A4F0065FCE9 /* no image wow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4E4176A4208B2A4F0065FCE9 /* no image wow.png */; };
 		4E4FC6542010AEDE00F37108 /* PinMKPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */; };
 		4E4FC6922048103700F37108 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E4FC6912048103700F37108 /* CoreLocation.framework */; };
@@ -21,6 +23,7 @@
 		4EAD3AA11EB9B9C200812438 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD3AA01EB9B9C200812438 /* MapKit.framework */; };
 		4EAD3AA31EBABB1A00812438 /* detailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAD3AA21EBABB1A00812438 /* detailViewController.swift */; };
 		4EAD3AA51EBB035E00812438 /* 写真.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4EAD3AA41EBB035E00812438 /* 写真.JPG */; };
+		4EB7525A20B6DAAA00CF5C27 /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB7525920B6DAAA00CF5C27 /* PinView.swift */; };
 		4EE59CCC1EC476C500B4E9AB /* CellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E059E8120B6CC48006484B7 /* PinView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PinView.xib; sourceTree = "<group>"; };
+		4E059E8320B6CD43006484B7 /* Empty.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Empty.xib; sourceTree = "<group>"; };
 		4E4176A4208B2A4F0065FCE9 /* no image wow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no image wow.png"; path = "../../../../../Applications/no image wow.png"; sourceTree = "<group>"; };
 		4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinMKPointAnnotation.swift; sourceTree = "<group>"; };
 		4E4FC6912048103700F37108 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -62,6 +67,7 @@
 		4EAD3AA01EB9B9C200812438 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4EAD3AA21EBABB1A00812438 /* detailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = detailViewController.swift; sourceTree = "<group>"; };
 		4EAD3AA41EBB035E00812438 /* 写真.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "写真.JPG"; path = "../../../Downloads/写真.JPG"; sourceTree = "<group>"; };
+		4EB7525920B6DAAA00CF5C27 /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinView.swift; sourceTree = "<group>"; };
 		4EE59CCB1EC476C500B4E9AB /* CellViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +124,9 @@
 			children = (
 				4EAD3A711EB9B62D00812438 /* AppDelegate.swift */,
 				4EAD3A731EB9B62D00812438 /* ViewController.swift */,
+				4E059E8320B6CD43006484B7 /* Empty.xib */,
+				4E059E8120B6CC48006484B7 /* PinView.xib */,
+				4EB7525920B6DAAA00CF5C27 /* PinView.swift */,
 				4E4FC6532010AEDE00F37108 /* PinMKPointAnnotation.swift */,
 				4EAD3AA41EBB035E00812438 /* 写真.JPG */,
 				4EAD3A751EB9B62D00812438 /* Main.storyboard */,
@@ -273,6 +282,8 @@
 				4EAD3AA51EBB035E00812438 /* 写真.JPG in Resources */,
 				4EAD3A791EB9B62D00812438 /* Assets.xcassets in Resources */,
 				4E4176A5208B2A4F0065FCE9 /* no image wow.png in Resources */,
+				4E059E8420B6CD43006484B7 /* Empty.xib in Resources */,
+				4E059E8220B6CC48006484B7 /* PinView.xib in Resources */,
 				4EAD3A771EB9B62D00812438 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +311,7 @@
 			files = (
 				4EAD3A741EB9B62D00812438 /* ViewController.swift in Sources */,
 				4EAD3A721EB9B62D00812438 /* AppDelegate.swift in Sources */,
+				4EB7525A20B6DAAA00CF5C27 /* PinView.swift in Sources */,
 				4EE59CCC1EC476C500B4E9AB /* CellViewController.swift in Sources */,
 				4EAD3AA31EBABB1A00812438 /* detailViewController.swift in Sources */,
 				4E995A9C1EFBDDE300CF7479 /* StoreInfo.swift in Sources */,

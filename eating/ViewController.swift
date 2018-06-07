@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import UserNotifications
 
-class ViewController: UIViewController,MKMapViewDelegate {
+class ViewController: UIViewController,MKMapViewDelegate  {
     @IBOutlet var mapView: MKMapView!
     var saveData: UserDefaults = UserDefaults.standard
     var storeInfos: [StoreInfo] = []
@@ -23,6 +23,7 @@ class ViewController: UIViewController,MKMapViewDelegate {
     var coordinate: CLLocationCoordinate2D!
     var myLocationManager:CLLocationManager!
     let alert: UIAlertController = UIAlertController(title: "注意！", message: "通知を拒否すると近くの店を探すことができません[設定]から通知を許可してください", preferredStyle: .alert)
+    var texturl: String?
     
     // 緯度表示用のラベル
     var nowLatitude:CLLocation!
@@ -131,7 +132,15 @@ class ViewController: UIViewController,MKMapViewDelegate {
             let annotation = PinMKPointAnnotation()     //アノテーションビューを生成する
             let location: CLLocation = i.locate
             annotation.coordinate = CLLocationCoordinate2DMake(location.coordinate.latitude,location.coordinate.longitude)                           //アノテーションビューの座標を設定する
-            annotation.title = i.name                //アノテーションビューのタイトルを設定する
+            //let baseString = i.name
+            //let attributedString = NSMutableAttributedString(string: baseString)
+            //let URLstring = "https://www.google.com.searchsxas?q=" + baseString
+            //attributedString.addAttribute(baseString, value: URLstring, range: NSString(string: baseString).range(of: baseString))
+            
+            
+            annotation.title = i.name            //アノテーションビューのタイトルを設定するattributedString
+            //print(type(of: baseString))
+            
             annotation.subtitle = i.place            //アノテーションビューのサブタイトルを設定する
             annotation.pinColor = i.pinColor         //アノテーションビューのpincolorを設定する
             annotation.imageName = getImage(imagefile: i.imagename)//アノテーションビューの画像を設定する
@@ -147,17 +156,35 @@ class ViewController: UIViewController,MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    
+    
+    
+    
+    
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         //annotation = PinPointAnnotation ではなかった時の処理
         guard let pinInfo = annotation as? PinMKPointAnnotation else { return nil }
         
         //ピンの吹き出し機能設定
-        let testPinView = MKPinAnnotationView()    //アノテーションビューを生成する。
+        let testPinView = Bundle.main.loadNibNamed("PinView", owner: self, options: nil)?.first as! PinView//アノテーションビューを生成する。
+
         testPinView.annotation = pinInfo       //アノテーションビューに座標、タイトル、サブタイトルを設定する。
         testPinView.canShowCallout = true          //吹き出しの表示をON にする。
         //アノテーションビューに色を設定する。
         
         testPinView.pinTintColor = pinInfo.pinColor
+        
+        let baseString = pinInfo.title
+        let attributedString = NSMutableAttributedString(string: baseString!)
+        let URLstring = "https://www.google.com.searchsxas?q=" + baseString!
+        attributedString.addAttribute(baseString!, value: URLstring, range: NSString(string: baseString!).range(of: baseString!))
+        
+        testPinView.PinViewname.text = URLstring
+        
+        
+        
+        
         
         //左ボタンをアノテーションビューに追加する。
         let pinimageView = UIImageView()
@@ -194,8 +221,6 @@ class ViewController: UIViewController,MKMapViewDelegate {
             storeInfos.remove(at: removeindex)
             
             let dictionaries = storeInfos.map{ $0.todictionary() }
-
-        
             self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: dictionaries), forKey: "storedata")
             print("保存完了１")
             mapView.removeAnnotation(view.annotation!)
@@ -253,6 +278,7 @@ class ViewController: UIViewController,MKMapViewDelegate {
         }
         
     }
+    
     
     
 }
