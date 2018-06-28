@@ -19,6 +19,7 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var storeInfos: [StoreInfo] = []
     var tmpArray: [[String : Any]]!
     var selectedCoordinate: String!
+    var selectedID: String!
     override func viewDidLoad() {
         super.viewDidLoad()
       //  table.datasource
@@ -73,9 +74,11 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    
     //cellが選択された時
     func tableView(_ tableView: UITableView,didSelectRowAt indexPath: IndexPath) {
        selectedCoordinate = storeInfos[indexPath.row].place
+       selectedID = storeInfos[indexPath.row].ID
     if selectedCoordinate != nil {
     // ViewController へ遷移するために Segue を呼び出す
             performSegue(withIdentifier: "toViewController",sender: nil)
@@ -93,9 +96,7 @@ class CellViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Segue 準備
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "toViewController") {
-            let VC: ViewController = (segue.destination as? ViewController)!
-            // SubViewController のselectedImgに選択された画像を設定する
-            VC.selectedCoor = selectedCoordinate
+            let controller = segue.destination as!ViewController
 
         
         }

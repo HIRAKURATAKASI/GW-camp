@@ -11,7 +11,10 @@ import MapKit
 import CoreLocation
 import UserNotifications
 
-class ViewController: UIViewController,MKMapViewDelegate  {
+
+
+
+class ViewController: UIViewController,MKMapViewDelegate,PinViewDelegate {
     @IBOutlet var mapView: MKMapView!
     var saveData: UserDefaults = UserDefaults.standard
     var storeInfos: [StoreInfo] = []
@@ -167,64 +170,76 @@ class ViewController: UIViewController,MKMapViewDelegate  {
         guard let pinInfo = annotation as? PinMKPointAnnotation else { return nil }
         
         //ピンの吹き出し機能設定
-        let testPinView = Bundle.main.loadNibNamed("PinView", owner: self, options: nil)?.first as! PinView//アノテーションビューを生成する。
-
-        testPinView.annotation = pinInfo       //アノテーションビューに座標、タイトル、サブタイトルを設定する。
-        testPinView.canShowCallout = true          //吹き出しの表示をON にする。
+        let annotationView = MKPinAnnotationView()
+        let pinView = Bundle.main.loadNibNamed("PinView", owner: self, options: nil)?.first as! PinView//アノテーションビューを生成する。
+        
+        annotationView.annotation = pinInfo       //アノテーションビューに座標、タイトル、サブタイトルを設定する。
+        annotationView.canShowCallout = true          //吹き出しの表示をON にする。
         //アノテーションビューに色を設定する。
         
-        testPinView.pinTintColor = pinInfo.pinColor
+        annotationView.pinTintColor = pinInfo.pinColor
         
         let baseString = pinInfo.title
         let attributedString = NSMutableAttributedString(string: baseString!)
-        let URLstring = "https://www.google.com.searchsxas?q=" + baseString!
-        attributedString.addAttribute(baseString!, value: URLstring, range: NSString(string: baseString!).range(of: baseString!))
+        var URLstring = "https://www.google.co.jp/search?q=" + baseString!
+        URLstring = URLstring.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+        print("あ"+URLstring)
+        attributedString.addAttribute(NSLinkAttributeName, value: URLstring, range: NSString(string: baseString!).range(of: baseString!))
         
-        testPinView.PinViewname.text = URLstring
+        print(URLstring)
+        pinView.PinViewmemo.text = pinInfo.subtitle
+        pinView.PinViewname.attributedText = attributedString
+        pinView.PinViewphoto.image = pinInfo.imageName
+        pinView.annotation = annotation
         
         
+        // 左ボタンをアノテーションビューに追加する。
+        //    let pinimageView = UIImageView()
+        //   pinimageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        //  pinimageView.image = pinInfo.imageName!
+        //    annotationView.leftCalloutAccessoryView = pinimageView
+        let widthConstraint = NSLayoutConstraint(item: pinView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 347)
+        pinView.addConstraint(widthConstraint)
+        
+        let heightConstraint = NSLayoutConstraint(item: pinView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 428)
+        pinView
+            
+            .addConstraint(heightConstraint)
+        
+        annotationView.detailCalloutAccessoryView = pinView
+        
+        return annotationView
         
         
-        
-        //左ボタンをアノテーションビューに追加する。
-        let pinimageView = UIImageView()
-        pinimageView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        pinimageView.image = pinInfo.imageName!
-        testPinView.leftCalloutAccessoryView = pinimageView
-        
-        //右ボタンをアノテーションビューに追加する。
-        let button2 = UIButton()                   //ボタンを定義
-        button2.frame = CGRect(x: 0, y: 0, width: 40, height: 40)//座標、大きさを設定する
-        button2.setTitle("削除", for: .normal)//ボタンの名前
-        button2.backgroundColor = UIColor.red//ボタンの色
-        button2.setTitleColor(UIColor.white, for:.normal)//バックカラー
-        testPinView.rightCalloutAccessoryView = button2
-        return testPinView
         
     }
+    
     //吹き出しアクササリー押下時の呼び出しメソッド
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    //    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    
+    //        if(control == view.rightCalloutAccessoryView) {
+    //            var removeindex:Int!
+    //右のボタンが押された場合はピンを消す。
+    //           guard let pinInfo = view.annotation as? PinMKPointAnnotation else {
+    //               return
+    //           }
+    //           for (index, storeInfonumber) in storeInfos.enumerated(){
+    //               if storeInfonumber.ID == pinInfo.ID{
+    //                   removeindex = index
+    //                    break
+    //                }
+    //           }
+    
+    //          storeInfos.remove(at: removeindex)
+    
+    //          let dictionaries = storeInfos.map{ $0.todictionary() }
+    //          self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: dictionaries), forKey: "storedata")
+    //          print("保存完了１")
+    //           mapView.removeAnnotation(view.annotation!)
+    //       }
+    //   }
+    func diddelete() {
         
-        if(control == view.rightCalloutAccessoryView) {
-            var removeindex:Int!
-            //右のボタンが押された場合はピンを消す。
-            guard let pinInfo = view.annotation as? PinMKPointAnnotation else {
-                return
-            }
-            for (index, storeInfonumber) in storeInfos.enumerated(){
-                if storeInfonumber.ID == pinInfo.ID{
-                    removeindex = index
-                    break
-                }
-            }
-            
-            storeInfos.remove(at: removeindex)
-            
-            let dictionaries = storeInfos.map{ $0.todictionary() }
-            self.saveData.set(NSKeyedArchiver.archivedData(withRootObject: dictionaries), forKey: "storedata")
-            print("保存完了１")
-            mapView.removeAnnotation(view.annotation!)
-        }
     }
     func applicationDidEnterBackground(_ application: UIApplication) {
         //通知設定に必要なクラスをインスタンス化
